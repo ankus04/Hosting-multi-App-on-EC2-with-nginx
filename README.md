@@ -10,6 +10,23 @@ Nginx (Hardened Reverse Proxy)
    ├── app1 → 127.0.0.1:3000
    └── app2 → 127.0.0.1:4000
 ```
+OR
+```
+Internet
+     │
+     ▼
+DNS → EC2 Public IP
+     │
+     ▼
+Nginx :80 / :443
+     │
+ ┌─────────────┐
+ │             │
+ ▼             ▼
+3000          4000
+Node App      Node App
+domain1       domain2
+```
 
 
 1. Launch EC2 -
