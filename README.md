@@ -27,15 +27,57 @@ sudo apt install nginx -y
 sudo systemctl enable nginx
 ```
 
-    Stop default config:
+  Stop default config:
 ```
 sudo rm /etc/nginx/sites-enabled/default
 ```
-    Create Reverse Proxy Config:
+  Create Reverse Proxy Config:
 ```
 sudo nano /etc/nginx/sites-available/apps
 ```
-    
+  Config:
+```
+server {
+    listen 443 ssl;
+    server_name domain1.com;
+
+    ssl_certificate /etc/ssl/domain1.crt;
+    ssl_certificate_key /etc/ssl/domain1.key;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name domain2.com;
+
+    ssl_certificate /etc/ssl/domain2.crt;
+    ssl_certificate_key /etc/ssl/domain2.key;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+```
+  Enable site:
+```
+sudo ln -s /etc/nginx/sites-available/apps /etc/nginx/sites-enabled/
+```
+  Test config:
+```
+sudo nginx -t
+```
+  Restart:
+```
+sudo systemctl restart nginx
+ ```   
 3. Install Node.js-
 ```
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
